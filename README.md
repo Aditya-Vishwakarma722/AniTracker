@@ -40,30 +40,6 @@ AniVault allows users to maintain their own collections, track watch status, org
 
 ---
 
-## 🏗️ Architecture
-
-```mermaid
-graph TD
-    Client[Client / Postman / Frontend] --> Controller[REST Controller]
-    Controller --> Service[Service Layer]
-    Service --> Repository[MongoDB Repository]
-    Repository --> Mongo[(MongoDB)]
-```
-
-The application follows a clean layered architecture:
-
-```text
-Controller
-    ↓
-Service
-    ↓
-Repository
-    ↓
-MongoDB
-```
-
----
-
 ## 🗄️ Data Model
 
 ### `User`
@@ -129,25 +105,19 @@ GET /api/movies?sort=rating,desc
 src/main/java/com/anivault/
 ├── controller/
 │   └── MediaController.java
-│
 ├── service/
 │   └── MediaService.java
-│
 ├── repository/
 │   └── MediaRepository.java
-│
 ├── entity/
 │   ├── Media.java
 │   └── User.java
-│
 ├── dto/
 │   ├── MediaRequest.java
 │   └── MediaResponse.java
-│
 ├── exception/
 │   ├── ResourceNotFoundException.java
 │   └── GlobalExceptionHandler.java
-│
 └── enums/
     ├── MediaType.java
     └── MediaStatus.java
@@ -184,7 +154,7 @@ The primary focus is learning and implementing:
 ```text
 REST APIs
     ↓
-Spring Boot Architecture
+Spring Boot
     ↓
 MongoDB
     ↓
@@ -202,3 +172,8 @@ Testing & Documentation
 > 🚧 **Status: Active Development**
 >
 > AniVault is currently in its initial development phase.
+
+```
+
+This version removes the architecture diagram/section while keeping the **data model, API, structure, roadmap, and project goal** intact.
+```
