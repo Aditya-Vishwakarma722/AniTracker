@@ -5,6 +5,7 @@ import com.codersHub.AniTracker.repository.MediaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MediaService {
@@ -15,15 +16,14 @@ public class MediaService {
         this.mediaRepository = mediaRepository;
     }
 
+    //SAVE MEDIA
     public Media SaveMedia(Media media){
         return mediaRepository.save(media);
     }
 
-    public List<Media> GetAllMedia(Media media){
-        return mediaRepository.findAll();
-    }
+    //GET ALL MEDIA
+    public List<Media> GetAllMedia() { return mediaRepository.findAll(); }
 
-    public List<Media> GetAllMedia() {
-        return mediaRepository.findAll();
-    }
+    //GET MEDIA BY ID
+    public Optional<Media> getMediaById(String id){ return mediaRepository.findById(id); }
 }

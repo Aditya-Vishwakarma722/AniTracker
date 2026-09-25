@@ -4,7 +4,9 @@ import com.codersHub.AniTracker.entity.Media;
 import com.codersHub.AniTracker.service.MediaService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/media")
@@ -24,5 +26,10 @@ public class MediaController {
     @GetMapping
     public List<Media> getMedia(){
         return mediaService.GetAllMedia();
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Media> getMediaById(@PathVariable String id){
+        return mediaService.getMediaById(id);
     }
 }
