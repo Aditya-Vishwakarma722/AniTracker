@@ -4,6 +4,8 @@ import com.codersHub.AniTracker.entity.Media;
 import com.codersHub.AniTracker.service.MediaService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/media")
 public class MediaController {
@@ -17,5 +19,10 @@ public class MediaController {
     @PostMapping
     public Media createMedia(@RequestBody Media media){
         return mediaService.SaveMedia(media);
+    }
+
+    @GetMapping
+    public List<Media> getMedia(){
+        return mediaService.GetAllMedia();
     }
 }
