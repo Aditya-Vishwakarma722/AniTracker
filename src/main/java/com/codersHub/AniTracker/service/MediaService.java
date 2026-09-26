@@ -26,4 +26,17 @@ public class MediaService {
 
     //GET MEDIA BY ID
     public Optional<Media> getMediaById(String id){ return mediaRepository.findById(id); }
+
+    //UPDATE MEDIA BY ID
+    public Media updateMedia(String id, Media media){
+        media.setId(id);
+        return mediaRepository.save(media);
+    }
+
+    //DELETE MEDIA BY ID
+    public void deleteMedia(String id){
+        mediaRepository.deleteById(id);
+    }
+
+
 }

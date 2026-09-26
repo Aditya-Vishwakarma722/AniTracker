@@ -2,6 +2,7 @@ package com.codersHub.AniTracker.controller;
 
 import com.codersHub.AniTracker.entity.Media;
 import com.codersHub.AniTracker.service.MediaService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
@@ -19,7 +20,7 @@ public class MediaController {
     }
 
     @PostMapping
-    public Media createMedia(@RequestBody Media media){
+    public Media createMedia(@Valid @RequestBody Media media){
         return mediaService.SaveMedia(media);
     }
 
@@ -31,5 +32,15 @@ public class MediaController {
     @GetMapping("/{id}")
     public Optional<Media> getMediaById(@PathVariable String id){
         return mediaService.getMediaById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Media updateMedia(@RequestBody Media media, @PathVariable String id){
+        return mediaService.updateMedia(id,media);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteMediaById(@PathVariable String id){
+        mediaService.deleteMedia(id);
     }
 }
