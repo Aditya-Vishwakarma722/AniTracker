@@ -1,6 +1,7 @@
 package com.codersHub.AniTracker.service;
 
 import com.codersHub.AniTracker.entity.Media;
+import com.codersHub.AniTracker.exception.ResourceNotFoundException;
 import com.codersHub.AniTracker.repository.MediaRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +30,20 @@ public class MediaService {
 
     //UPDATE MEDIA BY ID
     public Media updateMedia(String id, Media media){
-        media.setId(id);
-        return mediaRepository.save(media);
+        Media existingMedia = mediaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Media not found with id: " + id
+                        )
+                );
+
+        existingMedia.setName(media.getName());
+        existingMedia.setDescription(media.getDescription());
+        existingMedia.setType(media.getType());
+        existingMedia.setStatus(media.getStatus());
+        existingMedia.setRating(media.getRating());
+
+        return mediaRepository.save(existingMedia);
     }
 
     //DELETE MEDIA BY ID
