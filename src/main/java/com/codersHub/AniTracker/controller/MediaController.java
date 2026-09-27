@@ -1,11 +1,10 @@
 package com.codersHub.AniTracker.controller;
 
 import com.codersHub.AniTracker.entity.Media;
+import com.codersHub.AniTracker.exception.ResourceNotFoundException;
 import com.codersHub.AniTracker.service.MediaService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +29,10 @@ public class MediaController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Media> getMediaById(@PathVariable String id){
-        return mediaService.getMediaById(id);
+    public Media getMediaById(@PathVariable String id){
+        return mediaService.getMediaById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Media not found with id: " + id)
+        );
     }
 
     @PutMapping("/{id}")
