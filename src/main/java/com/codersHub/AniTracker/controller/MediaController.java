@@ -50,10 +50,18 @@ public class MediaController {
     }
 
     @GetMapping("/{id}")
-    public Media getMediaById(@PathVariable String id){
-        return mediaService.getMediaById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Media not found with id: " + id)
-        );
+    public MediaResponse getMediaById(@PathVariable String id){
+        Media media = mediaService.getMediaById(id);
+        MediaResponse response = new MediaResponse();
+
+        response.setId(media.getId());
+        response.setName(media.getName());
+        response.setDescription(media.getDescription());
+        response.setType(media.getType());
+        response.setRating(media.getRating());
+        response.setStatus(media.getStatus());
+
+        return response;
     }
 
     @PutMapping("/{id}")
