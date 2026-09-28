@@ -4,6 +4,7 @@ import com.codersHub.AniTracker.entity.Media;
 import com.codersHub.AniTracker.exception.ResourceNotFoundException;
 import com.codersHub.AniTracker.service.MediaService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -36,12 +37,13 @@ public class MediaController {
     }
 
     @PutMapping("/{id}")
-    public Media updateMedia(@RequestBody Media media, @PathVariable String id){
+    public Media updateMedia(@Valid @RequestBody Media media, @PathVariable String id){
         return mediaService.updateMedia(id,media);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMediaById(@PathVariable String id){
+    public ResponseEntity<Void> deleteMediaById(@PathVariable String id){
         mediaService.deleteMedia(id);
+        return ResponseEntity.noContent().build();
     }
 }

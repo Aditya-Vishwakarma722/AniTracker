@@ -48,8 +48,12 @@ public class MediaService {
 
     //DELETE MEDIA BY ID
     public void deleteMedia(String id){
+        if (!mediaRepository.existsById(id)) {
+            throw new ResourceNotFoundException(
+                    "Media not found with id: " + id
+            );
+        }
         mediaRepository.deleteById(id);
     }
-
 
 }
