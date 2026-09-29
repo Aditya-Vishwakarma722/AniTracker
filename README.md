@@ -9,7 +9,7 @@
 
 A personal **media tracking REST API** built with **Spring Boot** and **MongoDB** for managing Anime, Movies, TV Shows, Cartoons, and other types of media.
 
-AniTracker is being developed as a hands-on backend project, starting with a simple CRUD API and gradually expanding toward validation, authentication, authorization, testing, search, filtering, and other backend features.
+AniTracker is being developed as a hands-on backend project, starting with a structured CRUD API and gradually expanding toward authentication, authorization, testing, search, filtering, and other backend concepts.
 
 ---
 
@@ -33,17 +33,22 @@ AniTracker is being developed as a hands-on backend project, starting with a sim
 * 📋 **Media Types** — Supports Anime, Movies, TV Shows, and Cartoons.
 * 📌 **Watch Status** — Supports Planned, In Progress, Completed, On Hold, and Dropped.
 * ⭐ **Ratings** — Optional ratings from `0` to `10`.
-* ✅ **Request Validation** — Validates required fields and rating ranges.
-* ⚠️ **Exception Handling** — Centralized handling for validation errors and missing resources.
+* ✅ **Request Validation** — Validates required fields and rating ranges for create and update requests.
+* ⚠️ **Global Exception Handling** — Centralized handling of validation and resource-not-found errors.
 * 🔎 **Resource Lookup** — Retrieve individual media entries using their ID.
-* 🛡️ **Safe Updates** — Updates only existing media resources instead of accidentally creating new documents.
-* 🗑️ **Resource Existence Checks** — Delete operations verify that the requested resource exists.
+* 🛡️ **Safe Updates** — Updates only existing media resources and prevents accidental creation through PUT requests.
+* 🗑️ **Safe Deletion** — Verifies that a media resource exists before deleting it.
+* 📡 **Explicit HTTP Responses** — Uses appropriate HTTP status codes such as `400`, `404`, and `204`.
+* 📦 **DTO-based API Requests** — Uses `MediaRequest` to separate incoming API data from the database entity.
+* 📤 **DTO-based API Responses** — Uses `MediaResponse` to control the data exposed by the API.
 
 ---
 
-## 🗄️ Current Data Model
+## 🗄️ Data Model
 
 ### `Media`
+
+The `Media` class represents a media document stored in MongoDB.
 
 | Field         | Type     | Description                                          |
 | :------------ | :------- | :--------------------------------------------------- |
@@ -75,17 +80,54 @@ DROPPED
 
 ---
 
+## 📦 DTOs
+
+AniTracker separates API data from the MongoDB entity using **Data Transfer Objects (DTOs)**.
+
+### `MediaRequest`
+
+Used when receiving media data from the client.
+
+```text
+MediaRequest
+├── name
+├── description
+├── type
+├── status
+└── rating
+```
+
+The MongoDB `id` is intentionally not accepted from the client when creating media.
+
+### `MediaResponse`
+
+Used when returning media data to the client.
+
+```text
+MediaResponse
+├── id
+├── name
+├── description
+├── type
+├── status
+└── rating
+```
+
+This separation allows the API contract to evolve independently from the database entity.
+
+---
+
 ## 🌐 API
 
 ### Media Endpoints
 
-| Method   | Endpoint          | Description                     |
-| :------- | :---------------- | :------------------------------ |
-| `POST`   | `/api/media`      | Create a new media entry        |
-| `GET`    | `/api/media`      | Retrieve all media entries      |
-| `GET`    | `/api/media/{id}` | Retrieve a specific media entry |
-| `PUT`    | `/api/media/{id}` | Update an existing media entry  |
-| `DELETE` | `/api/media/{id}` | Delete an existing media entry  |
+| Method   | Endpoint          | Description                     | Success          |
+| :------- | :---------------- | :------------------------------ | :--------------- |
+| `POST`   | `/api/media`      | Create a new media entry        | `200 OK`         |
+| `GET`    | `/api/media`      | Retrieve all media entries      | `200 OK`         |
+| `GET`    | `/api/media/{id}` | Retrieve a specific media entry | `200 OK`         |
+| `PUT`    | `/api/media/{id}` | Update an existing media entry  | `200 OK`         |
+| `DELETE` | `/api/media/{id}` | Delete an existing media entry  | `204 No Content` |
 
 ### Example Request
 
@@ -104,9 +146,34 @@ Content-Type: application/json
 }
 ```
 
-### Validation
+### Example Response
 
-Invalid requests return a structured error response.
+```json
+{
+  "id": "generated-id",
+  "name": "Attack on Titan",
+  "description": "A story about humanity fighting against Titans.",
+  "type": "ANIME",
+  "status": "COMPLETED",
+  "rating": 9.5
+}
+```
+
+---
+
+## ✅ Validation
+
+Incoming create and update requests are validated using **Jakarta Validation**.
+
+Current validation rules include:
+
+* `name` cannot be blank.
+* `type` is required.
+* `status` is required.
+* `rating` is optional.
+* If provided, `rating` must be between `0` and `10`.
+
+Example validation response:
 
 ```json
 {
@@ -118,9 +185,15 @@ Invalid requests return a structured error response.
 }
 ```
 
+---
+
+## ⚠️ Exception Handling
+
+AniTracker uses a centralized `GlobalExceptionHandler` for handling common API errors.
+
 ### Resource Not Found
 
-Requests for non-existent media return:
+When a requested media ID does not exist:
 
 ```json
 {
@@ -130,6 +203,17 @@ Requests for non-existent media return:
 }
 ```
 
+The same handling is used for invalid GET, PUT, and DELETE resource IDs.
+
+### Current HTTP Statuses
+
+| Status            | Meaning                          | Example            |
+| :---------------- | :------------------------------- | :----------------- |
+| `200 OK`          | Request completed successfully   | GET, POST, PUT     |
+| `204 No Content`  | Resource deleted successfully    | DELETE             |
+| `400 Bad Request` | Request validation failed        | Invalid media data |
+| `404 Not Found`   | Requested resource doesn't exist | Invalid media ID   |
+
 ---
 
 ## 📂 Project Structure
@@ -138,14 +222,22 @@ Requests for non-existent media return:
 src/main/java/com/codersHub/AniTracker/
 ├── controller/
 │   └── MediaController.java
-├── service/
-│   └── MediaService.java
-├── repository/
-│   └── MediaRepository.java
+│
+├── dto/
+│   ├── MediaRequest.java
+│   └── MediaResponse.java
+│
 ├── entity/
 │   ├── Media.java
 │   ├── MediaType.java
 │   └── MediaStatus.java
+│
+├── repository/
+│   └── MediaRepository.java
+│
+├── service/
+│   └── MediaService.java
+│
 └── exception/
     ├── ResourceNotFoundException.java
     ├── ErrorResponse.java
@@ -169,13 +261,18 @@ src/main/java/com/codersHub/AniTracker/
 * [x] Request validation
 * [x] Global exception handling
 * [x] Resource not found handling
-* [x] Safe update handling
-* [x] Delete resource existence check
+* [x] Safe PUT/update handling
+* [x] Safe DELETE handling
+* [x] Appropriate HTTP status responses
+* [x] `MediaRequest` DTO
+* [x] `MediaResponse` DTO
+* [x] Request-to-entity mapping
+* [x] Entity-to-response mapping
 
 ### Planned
 
-* [ ] DTOs & request/response separation
-* [ ] Improved HTTP response handling with `ResponseEntity`
+* [ ] Complete DTO integration across all endpoints
+* [ ] Improve DTO/entity mapping structure
 * [ ] User accounts & personal collections
 * [ ] User authentication
 * [ ] JWT-based security
@@ -196,9 +293,9 @@ src/main/java/com/codersHub/AniTracker/
 
 ## 🎯 Project Goal
 
-AniTracker is being developed as a practical **Spring Boot backend project**.
+AniTracker is being developed as a practical **Spring Boot backend project**, gradually evolving from a basic CRUD application into a structured multi-user media management platform.
 
-The project starts with the fundamentals of building a REST API and will gradually introduce more advanced backend concepts as development progresses.
+The project focuses on learning how the different layers of a backend application work together while introducing professional backend practices incrementally.
 
 ```text
 REST API
@@ -213,7 +310,7 @@ Validation
     ↓
 Exception Handling
     ↓
-DTOs
+DTOs & Data Mapping
     ↓
 Authentication & Authorization
     ↓
@@ -224,8 +321,8 @@ Search, Filtering & Pagination
 Advanced Backend Concepts
 ```
 
-The goal is to build AniTracker incrementally while learning how the different parts of a real Spring Boot backend work together.
+The goal is to build AniTracker incrementally while understanding **why** each component is needed, rather than simply adding features without understanding their purpose.
 
 > 🚧 **Status: Active Development**
 >
-> AniTracker is currently in its early development phase, with the core Media CRUD functionality implemented.
+> AniTracker is currently in its early development phase, with the core Media CRUD API, validation, exception handling, and initial DTO-based request/response separation implemented.
