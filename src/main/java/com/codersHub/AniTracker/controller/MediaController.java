@@ -34,16 +34,7 @@ public class MediaController {
 
         Media savedMedia = mediaService.SaveMedia(media);
 
-        MediaResponse response = new MediaResponse();
-
-        response.setId(savedMedia.getId());
-        response.setName(savedMedia.getName());
-        response.setDescription(savedMedia.getDescription());
-        response.setType(savedMedia.getType());
-        response.setStatus(savedMedia.getStatus());
-        response.setRating(savedMedia.getRating());
-
-        return response;
+        return toMediaResponse(savedMedia);
     }
 
     @GetMapping
