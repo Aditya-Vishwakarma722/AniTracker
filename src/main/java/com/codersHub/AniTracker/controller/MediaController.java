@@ -50,34 +50,14 @@ public class MediaController {
     public List<MediaResponse> getMedia(){
         List<Media> medialist = mediaService.GetAllMedia();
 
-        return medialist.stream().map(media -> {
-            MediaResponse response = new MediaResponse();
-
-            response.setId(media.getId());
-            response.setName(media.getName());
-            response.setDescription(media.getDescription());
-            response.setType(media.getType());
-            response.setStatus(media.getStatus());
-            response.setRating(media.getRating());
-
-            return response;
-        }).toList();
+        return medialist.stream().map(media -> toMediaResponse(media)).toList();
 
     }
 
     @GetMapping("/{id}")
     public MediaResponse getMediaById(@PathVariable String id){
         Media media = mediaService.getMediaById(id);
-        MediaResponse response = new MediaResponse();
-
-        response.setId(media.getId());
-        response.setName(media.getName());
-        response.setDescription(media.getDescription());
-        response.setType(media.getType());
-        response.setRating(media.getRating());
-        response.setStatus(media.getStatus());
-
-        return response;
+        return toMediaResponse(media);
     }
 
     @PutMapping("/{id}")
@@ -89,5 +69,19 @@ public class MediaController {
     public ResponseEntity<Void> deleteMediaById(@PathVariable String id){
         mediaService.deleteMedia(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private MediaResponse toMediaResponse(Media media) {
+
+        MediaResponse response = new MediaResponse();
+
+        response.setId(media.getId());
+        response.setName(media.getName());
+        response.setDescription(media.getDescription());
+        response.setType(media.getType());
+        response.setStatus(media.getStatus());
+        response.setRating(media.getRating());
+
+        return response;
     }
 }
