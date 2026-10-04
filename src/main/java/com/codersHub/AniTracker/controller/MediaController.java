@@ -8,6 +8,8 @@ import com.codersHub.AniTracker.service.MediaService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -45,8 +47,22 @@ public class MediaController {
     }
 
     @GetMapping
-    public List<Media> getMedia(){
-        return mediaService.GetAllMedia();
+    public List<MediaResponse> getMedia(){
+        List<Media> medialist = mediaService.GetAllMedia();
+
+        return medialist.stream().map(media -> {
+            MediaResponse response = new MediaResponse();
+
+            response.setId(media.getId());
+            response.setName(media.getName());
+            response.setDescription(media.getDescription());
+            response.setType(media.getType());
+            response.setStatus(media.getStatus());
+            response.setRating(media.getRating());
+
+            return response;
+        }).toList();
+
     }
 
     @GetMapping("/{id}")
