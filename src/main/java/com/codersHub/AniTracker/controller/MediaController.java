@@ -8,8 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.codersHub.AniTracker.mapper.MediaMapper;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,10 +15,11 @@ import java.util.List;
 public class MediaController {
 
     private final MediaService mediaService;
-    private final MediaMapper mediaMapper = new MediaMapper();
+    private final MediaMapper mediaMapper;
 
-    public MediaController(MediaService mediaService) {
+    public MediaController(MediaService mediaService, MediaMapper mediaMapper) {
         this.mediaService = mediaService;
+        this.mediaMapper = mediaMapper;
     }
 
     @PostMapping

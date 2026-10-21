@@ -3,7 +3,9 @@ package com.codersHub.AniTracker.mapper;
 import com.codersHub.AniTracker.dto.MediaRequest;
 import com.codersHub.AniTracker.dto.MediaResponse;
 import com.codersHub.AniTracker.entity.Media;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MediaMapper {
 
     public Media toMedia(MediaRequest mediaRequest) {
