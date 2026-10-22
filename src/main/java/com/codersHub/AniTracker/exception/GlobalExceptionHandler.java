@@ -74,13 +74,28 @@ public class GlobalExceptionHandler {
                     .get(invalidFormatException.getPath().size() - 1)
                     .getPropertyName();
 
+
             Object invalidValue = invalidFormatException.getValue();
 
-            errors.put(
-                    fieldName,
-                    "Invalid value '" + invalidValue
-                            + "'. Please provide a valid " + fieldName + "."
-            );
+            Class<?> targetType = invalidFormatException.getTargetType();
+
+            String message;
+
+            if (targetType.isEnum()) {
+                String allowedValues = java.util.Arrays.stream(
+                                targetType.getEnumConstants()
+                        )
+                        .map(Object::toString)
+                        .collect(java.util.stream.Collectors.joining(", "));
+
+                message = "Invalid value '" + invalidValue
+                        + "'. Allowed values: " + allowedValues;
+            } else {
+                message = "Invalid value '" + invalidValue + "'.";
+            }
+
+            errors.put(fieldName, message);
+
 
         } else {
             errors.put(
