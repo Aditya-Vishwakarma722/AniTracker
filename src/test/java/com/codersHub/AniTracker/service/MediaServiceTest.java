@@ -22,5 +22,20 @@ class MediaServiceTest {
     @InjectMocks
     private MediaService mediaService;
 
+    @Test
+    void GetAllMediaTest(){
+        Media media = new Media();
+        media.setName("Attack on Titan");
+
+        List<Media> expectedMedia = List.of(media);
+
+        when(mediaRepository.findAll()).thenReturn(expectedMedia);
+
+        List<Media> actualMedia = mediaService.GetAllMedia();
+
+        assertEquals(expectedMedia,actualMedia);
+        verify(mediaRepository).findAll();
+
+    }
 }
 
