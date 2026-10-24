@@ -37,5 +37,33 @@ class MediaServiceTest {
         verify(mediaRepository).findAll();
 
     }
+
+    @Test
+    void GetNoMediaTest(){
+        Media media = new Media();
+        List<Media> mediaList = List.of();
+
+        when(mediaRepository.findAll()).thenReturn(mediaList);
+
+        List<Media> actualMedia = mediaService.GetAllMedia();
+
+        assertEquals(mediaList,actualMedia);
+        verify(mediaRepository).findAll();
+    }
+
+    @Test
+    void GetMediaByIdTest(){
+        String id = "123";
+        Media expectedMedia = new Media();
+        expectedMedia.setId(id);
+        expectedMedia.setName("Tokyo Ghoul");
+
+        when(mediaRepository.findById(id)).thenReturn(java.util.Optional.of(expectedMedia));
+
+        Media actualMedia = mediaService.getMediaById(id);
+
+        assertEquals(expectedMedia,actualMedia);
+        verify(mediaRepository).findById(id);
+    }
 }
 
