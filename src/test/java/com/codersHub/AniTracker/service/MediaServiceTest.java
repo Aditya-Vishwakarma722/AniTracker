@@ -1,5 +1,7 @@
 package com.codersHub.AniTracker.service;
 import com.codersHub.AniTracker.entity.Media;
+import com.codersHub.AniTracker.entity.MediaStatus;
+import com.codersHub.AniTracker.entity.MediaType;
 import com.codersHub.AniTracker.exception.ResourceNotFoundException;
 import com.codersHub.AniTracker.repository.MediaRepository;
 import org.junit.jupiter.api.Test;
@@ -7,12 +9,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.ResourceAccessException;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -93,30 +93,46 @@ class MediaServiceTest {
         verify(mediaRepository).save(media);
     }
 
+
+
     @Test
-    void UpdateMediaTest(){
+    void UpdateMediaTest() {
         String id = "123";
 
         Media existingMedia = new Media();
         existingMedia.setId(id);
         existingMedia.setName("One Piece");
-        existingMedia.setDescription("Nothing for now");
+        existingMedia.setDescription("Original description");
+        existingMedia.setType(MediaType.ANIME);
+        existingMedia.setStatus(MediaStatus.PLANNED);
+        existingMedia.setRating(7.0);
 
         Media updatedMedia = new Media();
         updatedMedia.setName("One Piece");
-        updatedMedia.setDescription("Updated Description");
+        updatedMedia.setDescription("Updated description");
+        updatedMedia.setType(MediaType.ANIME);
+        updatedMedia.setStatus(MediaStatus.COMPLETED);
+        updatedMedia.setRating(9.8);
 
-        when(mediaRepository.findById(id)).thenReturn(java.util.Optional.of(existingMedia));
-        when(mediaRepository.save(existingMedia)).thenReturn(existingMedia);
+        when(mediaRepository.findById(id))
+                .thenReturn(java.util.Optional.of(existingMedia));
+
+        when(mediaRepository.save(existingMedia))
+                .thenReturn(existingMedia);
 
         Media result = mediaService.updateMedia(id, updatedMedia);
 
         assertEquals("One Piece", result.getName());
-        assertEquals("Updated Description", result.getDescription());
+        assertEquals("Updated description", result.getDescription());
+        assertEquals(MediaType.ANIME, result.getType());
+        assertEquals(MediaStatus.COMPLETED, result.getStatus());
+        assertEquals(9.8, result.getRating());
 
         verify(mediaRepository).findById(id);
         verify(mediaRepository).save(existingMedia);
     }
+
+
 
     @Test
     void UpdateMediaNotFoundTest() {
