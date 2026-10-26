@@ -22,14 +22,13 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @ExtendWith(MockitoExtension.class)
@@ -189,5 +188,77 @@ public class MediaControllerTest {
         verify(mediaMapper).toMediaResponse(savedMedia);
     }
 
+
+    @Test
+    void UpdateMediaTest() throws Exception {
+        Media media = new Media();
+        media.setName("Attack on Titan Final Season");
+        media.setDescription("The final battle for humanity");
+        media.setType(MediaType.ANIME);
+        media.setStatus(MediaStatus.COMPLETED);
+        media.setRating(10.0);
+
+        Media updatedMedia = new Media();
+        updatedMedia.setId("123");
+        updatedMedia.setName("Attack on Titan Final Season");
+        updatedMedia.setDescription("The final battle for humanity");
+        updatedMedia.setType(MediaType.ANIME);
+        updatedMedia.setStatus(MediaStatus.COMPLETED);
+        updatedMedia.setRating(10.0);
+
+        MediaResponse response = new MediaResponse();
+        response.setId("123");
+        response.setName("Attack on Titan Final Season");
+        response.setDescription("The final battle for humanity");
+        response.setType(MediaType.ANIME);
+        response.setStatus(MediaStatus.COMPLETED);
+        response.setRating(10.0);
+
+        when(mediaMapper.toMedia(any(MediaRequest.class)))
+                .thenReturn(media);
+
+        when(mediaService.updateMedia("123", media))
+                .thenReturn(updatedMedia);
+
+        when(mediaMapper.toMediaResponse(updatedMedia))
+                .thenReturn(response);
+
+        mockMvc.perform(put("/api/media/123")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                            {
+                                "name": "Attack on Titan Final Season",
+                                "description": "The final battle for humanity",
+                                "type": "ANIME",
+                                "status": "COMPLETED",
+                                "rating": 10.0
+                            }
+                            """))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(
+                        APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value("123"))
+                .andExpect(jsonPath("$.name")
+                        .value("Attack on Titan Final Season"))
+                .andExpect(jsonPath("$.description")
+                        .value("The final battle for humanity"))
+                .andExpect(jsonPath("$.type").value("ANIME"))
+                .andExpect(jsonPath("$.status").value("COMPLETED"))
+                .andExpect(jsonPath("$.rating").value(10.0));
+
+        verify(mediaMapper).toMedia(any(MediaRequest.class));
+        verify(mediaService).updateMedia("123", media);
+        verify(mediaMapper).toMediaResponse(updatedMedia);
+    }
+
+
+    @Test
+    void DeleteMediaTest() throws Exception {
+        mockMvc.perform(delete("/api/media/123"))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+
+        verify(mediaService).deleteMedia("123");
+    }
 
 }
