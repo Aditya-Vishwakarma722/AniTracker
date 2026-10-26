@@ -1,6 +1,8 @@
 package com.codersHub.AniTracker.controller;
 
 import com.codersHub.AniTracker.entity.Media;
+import com.codersHub.AniTracker.exception.GlobalExceptionHandler;
+import com.codersHub.AniTracker.exception.ResourceNotFoundException;
 import com.codersHub.AniTracker.mapper.MediaMapper;
 import com.codersHub.AniTracker.service.MediaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +22,7 @@ import com.codersHub.AniTracker.dto.MediaRequest;
 
 import java.util.List;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,8 +50,10 @@ public class MediaControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(mediaController)
+                .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
+
 
 
     @Test
@@ -259,6 +262,238 @@ public class MediaControllerTest {
                 .andExpect(content().string(""));
 
         verify(mediaService).deleteMedia("123");
+    }
+
+
+    @Test
+    void CreateMediaWithBlankNameTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "",
+                "description": "Humanity fights against Titans",
+                "type": "ANIME",
+                "status": "COMPLETED",
+                "rating": 9.0
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+        verifyNoInteractions(mediaService);
+    }
+
+
+    @Test
+    void CreateMediaWithInvalidRatingTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "Attack on Titan",
+                "description": "Humanity fights against Titans",
+                "type": "ANIME",
+                "status": "COMPLETED",
+                "rating": 11.0
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(mediaService);
+    }
+
+
+    @Test
+    void CreateMediaWithNegativeRatingTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "Attack on Titan",
+                "description": "Humanity fights against Titans",
+                "type": "ANIME",
+                "status": "COMPLETED",
+                "rating": -1.0
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(mediaService);
+    }
+
+
+    @Test
+    void CreateMediaWithoutTypeTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "Attack on Titan",
+                "description": "Humanity fights against Titans",
+                "status": "COMPLETED",
+                "rating": 9.0
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(mediaService);
+    }
+
+
+    @Test
+    void CreateMediaWithoutStatusTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "Attack on Titan",
+                "description": "Humanity fights against Titans",
+                "type": "ANIME",
+                "rating": 9.0
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(mediaService);
+    }
+
+
+    @Test
+    void CreateMediaWithInvalidTypeTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "Attack on Titan",
+                "description": "Humanity fights against Titans",
+                "type": "BOOK",
+                "status": "COMPLETED",
+                "rating": 9.0
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(mediaService);
+    }
+
+
+    @Test
+    void GetMediaByIdNotFoundTest() throws Exception {
+        String id = "999";
+
+        when(mediaService.getMediaById(id))
+                .thenThrow(new ResourceNotFoundException("Media not found with id: " + id));
+
+        mockMvc.perform(get("/api/media/" + id))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("Media not found with id: " + id));
+    }
+
+
+    @Test
+    void CreateMediaWithInvalidTypeReturnsErrorDetailsTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "Attack on Titan",
+                "description": "Humanity fights against Titans",
+                "type": "BOOK",
+                "status": "COMPLETED",
+                "rating": 9.0
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Invalid request value"))
+                .andExpect(jsonPath("$.errors.type").exists())
+                .andExpect(jsonPath("$.errors.type").value(
+                        org.hamcrest.Matchers.containsString("BOOK")
+                ))
+                .andExpect(jsonPath("$.errors.type").value(
+                        org.hamcrest.Matchers.containsString("ANIME")
+                ));
+    }
+
+    @Test
+    void DeleteMediaNotFoundTest() throws Exception {
+        String id = "999";
+
+        doThrow(new ResourceNotFoundException("Media not found with id: " + id))
+                .when(mediaService).deleteMedia(id);
+
+        mockMvc.perform(delete("/api/media/" + id))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message")
+                        .value("Media not found with id: " + id));
+    }
+
+    @Test
+    void UpdateMediaNotFoundTest() throws Exception {
+        String id = "999";
+
+        String requestBody = """
+            {
+                "name": "Attack on Titan",
+                "description": "Humanity fights against Titans",
+                "type": "ANIME",
+                "status": "COMPLETED",
+                "rating": 9.0
+            }
+            """;
+
+        when(mediaMapper.toMedia(any(MediaRequest.class)))
+                .thenReturn(new Media());
+
+        when(mediaService.updateMedia(eq(id), any(Media.class)))
+                .thenThrow(new ResourceNotFoundException(
+                        "Media not found with id: " + id));
+
+        mockMvc.perform(put("/api/media/" + id)
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message")
+                        .value("Media not found with id: " + id));
+    }
+
+    @Test
+    void CreateMediaWithMalformedJsonTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "Attack on Titan",
+                "type": "ANIME",
+                "status": "COMPLETED",
+                "rating": 9.0,
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message")
+                        .value("Invalid request value"))
+                .andExpect(jsonPath("$.errors.body").exists());
+
+        verifyNoInteractions(mediaService);
     }
 
 }
