@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.codersHub.AniTracker.dto.MediaResponse;
 import com.codersHub.AniTracker.entity.MediaStatus;
 import com.codersHub.AniTracker.entity.MediaType;
+import com.codersHub.AniTracker.dto.MediaRequest;
 
 import java.util.List;
 
@@ -27,6 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.hamcrest.Matchers.is;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @ExtendWith(MockitoExtension.class)
 public class MediaControllerTest {
@@ -122,5 +126,68 @@ public class MediaControllerTest {
 
         verify(mediaService).getMediaById("123");
     }
+
+
+    @Test
+    void CreateMediaTest() throws Exception {
+        Media media = new Media();
+        media.setName("Attack on Titan");
+        media.setDescription("Humanity fights against Titans");
+        media.setType(MediaType.ANIME);
+        media.setStatus(MediaStatus.COMPLETED);
+        media.setRating(9.0);
+
+        Media savedMedia = new Media();
+        savedMedia.setId("123");
+        savedMedia.setName("Attack on Titan");
+        savedMedia.setDescription("Humanity fights against Titans");
+        savedMedia.setType(MediaType.ANIME);
+        savedMedia.setStatus(MediaStatus.COMPLETED);
+        savedMedia.setRating(9.0);
+
+        MediaResponse response = new MediaResponse();
+        response.setId("123");
+        response.setName("Attack on Titan");
+        response.setDescription("Humanity fights against Titans");
+        response.setType(MediaType.ANIME);
+        response.setStatus(MediaStatus.COMPLETED);
+        response.setRating(9.0);
+
+        when(mediaMapper.toMedia(any(MediaRequest.class)))
+                .thenReturn(media);
+
+        when(mediaService.SaveMedia(media))
+                .thenReturn(savedMedia);
+
+        when(mediaMapper.toMediaResponse(savedMedia))
+                .thenReturn(response);
+
+        mockMvc.perform(post("/api/media")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                            {
+                                "name": "Attack on Titan",
+                                "description": "Humanity fights against Titans",
+                                "type": "ANIME",
+                                "status": "COMPLETED",
+                                "rating": 9.0
+                            }
+                            """))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(
+                        APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value("123"))
+                .andExpect(jsonPath("$.name").value("Attack on Titan"))
+                .andExpect(jsonPath("$.description")
+                        .value("Humanity fights against Titans"))
+                .andExpect(jsonPath("$.type").value("ANIME"))
+                .andExpect(jsonPath("$.status").value("COMPLETED"))
+                .andExpect(jsonPath("$.rating").value(9.0));
+
+        verify(mediaMapper).toMedia(any(MediaRequest.class));
+        verify(mediaService).SaveMedia(media);
+        verify(mediaMapper).toMediaResponse(savedMedia);
+    }
+
 
 }
