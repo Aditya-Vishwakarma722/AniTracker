@@ -1,5 +1,6 @@
 package com.codersHub.AniTracker.controller;
 
+import com.codersHub.AniTracker.entity.Media;
 import com.codersHub.AniTracker.mapper.MediaMapper;
 import com.codersHub.AniTracker.service.MediaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import com.codersHub.AniTracker.entity.MediaType;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,6 +85,42 @@ public class MediaControllerTest {
                 .andExpect(jsonPath("$[0].type").value("ANIME"))
                 .andExpect(jsonPath("$[0].status").value("COMPLETED"))
                 .andExpect(jsonPath("$[0].rating").value(9.0));
+    }
+
+    @Test
+    void GetMediaByIdTest() throws Exception{
+        Media media = new Media();
+
+        media.setId("123");
+        media.setName("Attack on Titan");
+        media.setDescription("Humanity fights against Titans");
+        media.setType(MediaType.ANIME);
+        media.setStatus(MediaStatus.COMPLETED);
+        media.setRating(9.0);
+
+        MediaResponse response = new MediaResponse();
+        response.setId("123");
+        response.setName("Attack on Titan");
+        response.setDescription("Humanity fights against Titans");
+        response.setType(MediaType.ANIME);
+        response.setStatus(MediaStatus.COMPLETED);
+        response.setRating(9.0);
+
+        when(mediaService.getMediaById("123")).thenReturn(media);
+        when(mediaMapper.toMediaResponse(media)).thenReturn(response);
+
+        mockMvc.perform(get("/api/media/123"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/json"))
+                .andExpect(jsonPath("$.id").value("123"))
+                .andExpect(jsonPath("$.name").value("Attack on Titan"))
+                .andExpect(jsonPath("$.description")
+                        .value("Humanity fights against Titans"))
+                .andExpect(jsonPath("$.type").value("ANIME"))
+                .andExpect(jsonPath("$.status").value("COMPLETED"))
+                .andExpect(jsonPath("$.rating").value(9.0));
+
+        verify(mediaService).getMediaById("123");
     }
 
 }
