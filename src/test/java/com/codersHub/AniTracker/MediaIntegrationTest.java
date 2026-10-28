@@ -19,8 +19,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
 @SpringBootTest
@@ -243,6 +241,119 @@ class MediaIntegrationTest {
                 .andExpect(status().isNoContent());
 
         assertTrue(mediaRepository.findById(mediaId).isEmpty());
+    }
+
+
+    @Test
+    void getNonExistentMediaIntegrationTest() throws Exception {
+
+        String nonExistentId = "000000000000000000000000";
+
+        mockMvc.perform(get("/api/media/" + nonExistentId))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    void getMediaWithMalformedIdIntegrationTest() throws Exception {
+        mockMvc.perform(get("/api/media/not-a-valid-id"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void createMediaWithoutNameIntegrationTest() throws Exception {
+        String requestBody = """
+            {
+                "description": "Test description",
+                "type": "ANIME",
+                "status": "WATCHING",
+                "rating": 8
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createMediaWithBlankNameIntegrationTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "   ",
+                "description": "Test description",
+                "type": "ANIME",
+                "status": "WATCHING",
+                "rating": 8
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createMediaWithInvalidEnumIntegrationTest() throws Exception {
+        String requestBody = """
+            {
+                "name": "Invalid Enum Test",
+                "description": "Test description",
+                "type": "NOT_A_REAL_TYPE",
+                "status": "WATCHING",
+                "rating": 8
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateNonExistentMediaIntegrationTest() throws Exception {
+        String nonExistentId = "000000000000000000000000";
+
+        String requestBody = """
+        {
+            "name": "Updated Test",
+            "description": "Updated description",
+            "type": "ANIME",
+            "status": "IN_PROGRESS",
+            "rating": 9
+        }
+        """;
+
+        mockMvc.perform(put("/api/media/" + nonExistentId)
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteNonExistentMediaIntegrationTest() throws Exception {
+        String nonExistentId = "000000000000000000000000";
+
+        mockMvc.perform(delete("/api/media/" + nonExistentId))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void createMediaWithMalformedJsonIntegrationTest() throws Exception {
+        String invalidJson = """
+            {
+                "name": "Broken JSON",
+                "rating":
+            }
+            """;
+
+        mockMvc.perform(post("/api/media")
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
     }
 
 }
