@@ -1,230 +1,211 @@
-# 🎬 AniTracker
+<div align="center">
 
-```{=html}
+```text
+   _____         .__ ___________                     __                 
+  /  _  \   ____ |__|__    ___/___________    ____ |  | __ ___________ 
+ /  /_\  \ /    \|  | |    |  \_  __ \__  \ _/ ___\|  |/ // __ \_  __ \
+/    |    \   |  \  | |    |   |  | \// __ \\  \___|    <\  ___/|  | \/
+\____|__  /___|  /__| |____|   |__|  (____  /\___  >__|_ \\___  >__|   
+        \/     \/                         \/     \/     \/    \/       
+```
+
+### 🎬 Personal Media Discovery & Watchlist Engine
+
 <p align="center">
-```
-`<img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 21" />`{=html}
-`<img src="https://img.shields.io/badge/Spring_Boot-4.1.1-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot 4.1.1" />`{=html}
-`<img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB Atlas" />`{=html}
-`<img src="https://img.shields.io/badge/Maven-Build-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven" />`{=html}
-```{=html}
+  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 21" />
+  <img src="https://img.shields.io/badge/Spring_Boot-4.1.1-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot 4.1.1" />
+  <img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB Atlas" />
+  <img src="https://img.shields.io/badge/Maven-Build-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven" />
+  <img src="https://img.shields.io/badge/Status-Active_Development-F59E0B?style=for-the-badge" alt="Status" />
 </p>
+
+<kbd>🧭 <a href="#-the-vision">Vision</a></kbd>
+<kbd>🏗️ <a href="#-system-architecture">Architecture</a></kbd>
+<kbd>🗄️ <a href="#-domain-model--dto-shield">Data Model</a></kbd>
+<kbd>🌐 <a href="#-api-control-center">API Reference</a></kbd>
+<kbd>⚡ <a href="#-quick-start-terminal">Quick Start</a></kbd>
+<kbd>🗺️ <a href="#-engineering-roadmap">Roadmap</a></kbd>
+
+</div>
+
+---
+
+## 🧭 The Vision
+
+<table>
+<tr>
+<td width="65%" valign="top">
+
+### 💡 Why AniTracker?
+Tracking watchlists across half a dozen streaming platforms, sticky notes, and fragmented tracker sites gets messy fast. **AniTracker** is being engineered as the unified backend engine for a multi-user media discovery and personal tracking platform.
+
+Instead of rushing into a bloated full-stack app with fragile foundations, this project takes an **architecture-first approach**—building resilient REST contracts, strict DTO boundaries, centralized error handling, and multi-tier test coverage before scaling into multi-tenant user libraries.
+
+</td>
+<td width="35%" valign="top">
+
+### 🎯 Supported Formats
+```text
+┌────────────────────────────┐
+│  ⛩️ ANIME                  │
+│  🍿 MOVIE                  │
+│  📺 TV_SHOW                │
+│  🎨 CARTOON                │
+└────────────────────────────┘
 ```
-**AniTracker** is a backend project for discovering and tracking Anime,
-Movies, TV Shows, Cartoons, and other forms of media.
+*Track across 5 lifecycle states:*
+`PLANNED` • `IN_PROGRESS` • `COMPLETED` • `ON_HOLD` • `DROPPED`
 
-The long-term goal is to build a **multi-user personal media discovery
-and tracking platform**. Users will be able to explore media
-information, find external viewing sources, maintain their own
-libraries, track watch progress, and receive recommendations.
+</td>
+</tr>
+</table>
 
-AniTracker is **not** a video-hosting or streaming platform. It will
-provide media information and links to external services rather than
-hosting video content.
+> [!IMPORTANT]
+> **Platform Scope:** AniTracker is a **metadata catalog and tracking engine**, not a video-hosting or streaming service. It indexes media information, tracks personal watch progress, and links out to official external viewing platforms.
 
-The project is being developed incrementally, with a focus on
-understanding backend architecture and implementing reliable features
-before starting frontend development.
+---
 
-------------------------------------------------------------------------
+## 🛠️ Tech Stack & Tooling Matrix
 
-## 🛠️ Technical Stack
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <h3>☕ Core Runtime</h3>
+      <b>Java 21</b><br/>
+      <sub>Modern language features, strict typing, and high-performance runtime</sub>
+    </td>
+    <td align="center" width="25%">
+      <h3>🚀 Web Framework</h3>
+      <b>Spring Boot 4.1.1</b><br/>
+      <sub>REST API routing, dependency injection & lifecycle orchestration</sub>
+    </td>
+    <td align="center" width="25%">
+      <h3>🗄️ Cloud Database</h3>
+      <b>MongoDB Atlas</b><br/>
+      <sub>NoSQL document persistence via Spring Data MongoDB</sub>
+    </td>
+    <td align="center" width="25%">
+      <h3>🛡️ Quality & Build</h3>
+      <b>Maven + JUnit 5</b><br/>
+      <sub>Jakarta Validation, Lombok, Mockito & integration testing</sub>
+    </td>
+  </tr>
+</table>
 
-  --------------------------------------------------------------------------
-Category         Technology             Purpose
-  ---------------- ---------------------- ----------------------------------
-☕ **Language**  **Java 21**            Core application development
+---
 
-🚀 **Framework** **Spring Boot 4.1.1**  REST API & backend development
+## 🏗️ System Architecture
 
-🗄️ **Database**  **MongoDB Atlas**      NoSQL document storage
+AniTracker enforces strict separation of concerns. External API contracts are completely decoupled from internal MongoDB documents—controllers never touch raw database entities, and clients can never spoof internal database IDs.
 
-🔗 **Data        **Spring Data          MongoDB repository & data access
-Access**         MongoDB**
-
-📦 **Build       **Maven**              Dependency management & builds
-Tool**
-
-⚡ **Utilities** **Lombok**             Boilerplate code reduction
-
-✅               **Jakarta Validation** Request data validation
-**Validation**
-
-🧪 **Testing**   **JUnit 5, Mockito &   Unit, controller & integration
-Spring Boot Test**     testing
-  --------------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-## ✨ Implemented Features
-
-The current implementation provides the initial **Media CRUD API**. It
-is a working foundation, not yet the complete multi-user AniTracker
-application.
-
--   🎞️ **Media CRUD** --- Create, retrieve, update, and delete media
-    entries.
--   📋 **Media Types** --- Supports Anime, Movies, TV Shows, and
-    Cartoons.
--   📌 **Media Status** --- Supports Planned, In Progress, Completed, On
-    Hold, and Dropped.
--   ⭐ **Ratings** --- Optional ratings between `0` and `10`.
--   ✅ **Request Validation** --- Validates required fields and rating
-    ranges on create and update requests.
--   ⚠️ **Global Exception Handling** --- Centralized handling for
-    validation failures, invalid request values, and missing resources.
--   🔎 **Resource Lookup** --- Retrieve a media entry using its MongoDB
-    ID.
--   🛡️ **Safe Updates** --- Updates only existing media resources; a PUT
-    request does not create a missing resource.
--   🗑️ **Safe Deletion** --- Checks that a media resource exists before
-    deleting it.
--   📡 **HTTP Responses** --- Uses appropriate response statuses,
-    including `200 OK`, `400 Bad Request`, `404 Not Found`, and
-    `204 No Content`.
--   📦 **DTO-based Requests** --- Uses `MediaRequest` to separate
-    incoming API data from the MongoDB entity.
--   📤 **DTO-based Responses** --- Uses `MediaResponse` to control the
-    data returned by the API.
--   🔄 **Centralized Mapping** --- Uses `MediaMapper` to convert between
-    request DTOs, entities, and response DTOs.
--   🧪 **Automated Tests** --- Includes application-context, service,
-    controller, MongoDB connection, and API integration tests.
-
-> **Current limitation:** Media records are not yet associated with
-> individual user accounts. The current CRUD API is an initial
-> media-management foundation. Multi-user ownership and personal watch
-> tracking will be introduced through a planned domain-model redesign.
-
-------------------------------------------------------------------------
-
-## 🗄️ Current Data Model
-
-### `Media`
-
-The `Media` class represents a media document stored in MongoDB.
-
-  -------------------------------------------------------------------------------
-Field           Type            Description
-  --------------- --------------- -----------------------------------------------
-`id`            `String`        MongoDB document identifier
-
-`name`          `String`        Media title
-
-`description`   `String`        Optional description
-
-`type`          `MediaType`     Anime, Movie, TV Show, or Cartoon
-
-`status`        `MediaStatus`   Planned, In Progress, Completed, On Hold, or
-Dropped
-
-`rating`        `Double`        Optional rating between `0` and `10`
--------------------------------------------------------------------------------
-
-**Architecture note:** In the current prototype, `status` and `rating`
-are stored directly in `Media`. Before implementing multi-user
-libraries, we plan to separate shared media metadata from user-specific
-information. Watch status, progress, and a user's personal rating should
-belong to that user's library entry rather than to a shared media
-record.
-
-### `MediaType`
-
-``` text
-ANIME
-MOVIE
-TV_SHOW
-CARTOON
+```text
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         ANITRACKER REQUEST PIPELINE                          ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║   [ Client JSON Payload ]                                                    ║
+║              │                                                               ║
+║              ▼                                                               ║
+║   ┌─────────────────────┐      ┌─────────────────────────────────────────┐   ║
+║   │   MediaController   │ ───► │ Jakarta @Valid checks MediaRequest DTO  │   ║
+║   └──────────┬──────────┘      └─────────────────────────────────────────┘   ║
+║              │                                                               ║
+║              ▼                                                               ║
+║   ┌─────────────────────┐      ┌─────────────────────────────────────────┐   ║
+║   │     MediaMapper     │ ───► │ Translates DTO ⇄ Entity (hides DB IDs)  │   ║
+║   └──────────┬──────────┘      └─────────────────────────────────────────┘   ║
+║              │                                                               ║
+║              ▼                                                               ║
+║   ┌─────────────────────┐      ┌─────────────────────────────────────────┐   ║
+║   │    MediaService     │ ───► │ Enforces safe PUT/DELETE & domain rules │   ║
+║   └──────────┬──────────┘      └─────────────────────────────────────────┘   ║
+║              │                                                               ║
+║              ▼                                                               ║
+║   ┌─────────────────────┐      ┌─────────────────────────────────────────┐   ║
+║   │   MediaRepository   │ ───► │ Spring Data MongoDB Atlas persistence   │   ║
+║   └─────────────────────┘      └─────────────────────────────────────────┘   ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### `MediaStatus`
+### ✨ Implemented Foundation (v0.1 Feature Grid)
 
-``` text
-PLANNED
-IN_PROGRESS
-COMPLETED
-ON_HOLD
-DROPPED
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h4>🎞️ Complete Media CRUD</h4>
+      Create, inspect, update, and purge media entries across Anime, Movies, TV Shows, and Cartoons with clean HTTP semantics (<code>200</code>, <code>204</code>, <code>400</code>, <code>404</code>).
+    </td>
+    <td width="50%" valign="top">
+      <h4>🛡️ Safe & Idempotent Mutations</h4>
+      <code>PUT</code> requests strictly update existing entries (preventing accidental ghost creation), and <code>DELETE</code> operations verify existence before removal.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h4>📦 Strict DTO Boundary</h4>
+      Inbound payloads (<code>MediaRequest</code>) strip out ID fields, while outbound payloads (<code>MediaResponse</code>) control exactly what gets serialized to the client.
+    </td>
+    <td width="50%" valign="top">
+      <h4>⚠️ Global Exception Shield</h4>
+      A centralized <code>@RestControllerAdvice</code> intercepts validation failures, bad enums, malformed JSON, and missing IDs—returning structured error envelopes.
+    </td>
+  </tr>
+</table>
+
+---
+
+## 🗄️ Domain Model & DTO Shield
+
+```text
+┌───────────────────────────┐        ┌───────────────────────────┐        ┌───────────────────────────┐
+│   📥 MediaRequest (DTO)   │        │   🗄️ Media (@Document)    │        │  📤 MediaResponse (DTO)   │
+├───────────────────────────┤        ├───────────────────────────┤        ├───────────────────────────┤
+│ • name        [Required]  │        │ • id          [ObjectId]  │        │ • id                      │
+│ • description [Optional]  │ ─────► │ • name                    │ ─────► │ • name                    │
+│ • type        [Required]  │ Mapper │ • description             │ Mapper │ • description             │
+│ • status      [Required]  │        │ • type        [MediaType] │        │ • type                    │
+│ • rating      [0.0 - 10]  │        │ • status    [MediaStatus] │        │ • status                  │
+└───────────────────────────┘        │ • rating                  │        │ • rating                  │
+  (No ID accepted from user)         └───────────────────────────┘        └───────────────────────────┘
 ```
 
-------------------------------------------------------------------------
+> [!WARNING]
+> **Upcoming Domain Split (Phase 2 Architecture Refactor):**
+> Right now, `status` and `rating` live directly inside the `Media` document as a single-user prototype. Before multi-user accounts launch, the schema is being split into three distinct concepts so thousands of users can track the same show without duplicating catalog metadata:
+>
+> ```text
+> ┌──────────────┐     owns     ┌─────────────────────────────┐   references   ┌─────────────────────────┐
+> │  👤 User     │ ───────────► │ 📚 UserMedia (LibraryEntry) │ ─────────────► │ 🎬 Media (Shared Info)  │
+> │  • Profile   │              │  • Watch Status & Progress  │                │  • Title & Synopsis     │
+> │  • Auth/JWT  │              │  • Personal Rating & Notes  │                │  • Type, Genres & Links │
+> └──────────────┘              └─────────────────────────────┘                └─────────────────────────┘
+> ```
 
-## 📦 DTOs & Mapping
+---
 
-AniTracker separates API data from the MongoDB entity using **Data
-Transfer Objects (DTOs)**.
+## 🌐 API Control Center
 
-### `MediaRequest`
+| Method | Endpoint | Operation | Status Code |
+| :--- | :--- | :--- | :--- |
+| <kbd>POST</kbd> | `/api/media` | Register a new media title in the catalog | `200 OK` |
+| <kbd>GET</kbd> | `/api/media` | Retrieve all tracked media entries | `200 OK` |
+| <kbd>GET</kbd> | `/api/media/{id}` | Retrieve a specific media entry by MongoDB ID | `200 OK` |
+| <kbd>PUT</kbd> | `/api/media/{id}` | Update an existing media entry (safe check) | `200 OK` |
+| <kbd>DELETE</kbd> | `/api/media/{id}` | Delete an existing media entry | `204 No Content` |
 
-Used when receiving media data from the client.
+### 📡 Interactive Payload Inspector
+*(Click any box below to expand the live JSON request/response contract)*
 
-``` text
-MediaRequest
-├── name
-├── description
-├── type
-├── status
-└── rating
-```
+<details open>
+<summary><b>🟢 1. Create Media Entry — <code>POST /api/media</code> (200 OK)</b></summary>
+<br/>
 
-The MongoDB `id` is generated and managed by the application/database;
-it is not accepted as part of the request DTO.
-
-### `MediaResponse`
-
-Used when returning media data to the client.
-
-``` text
-MediaResponse
-├── id
-├── name
-├── description
-├── type
-├── status
-└── rating
-```
-
-### `MediaMapper`
-
-Converts:
-
--   `MediaRequest` → `Media`
--   `Media` → `MediaResponse`
-
-This keeps conversion logic out of the controller and allows the API
-contract to evolve independently from the database entity.
-
-------------------------------------------------------------------------
-
-## 🌐 API
-
-### Media Endpoints
-
-  -------------------------------------------------------------------------------
-Method     Endpoint            Description                   Success
-  ---------- ------------------- ----------------------------- ------------------
-`POST`     `/api/media`        Create a new media entry      `200 OK`
-
-`GET`      `/api/media`        Retrieve all media entries    `200 OK`
-
-`GET`      `/api/media/{id}`   Retrieve a specific media     `200 OK`
-entry
-
-`PUT`      `/api/media/{id}`   Update an existing media      `200 OK`
-entry
-
-`DELETE`   `/api/media/{id}`   Delete an existing media      `204 No Content`
-entry
-  -------------------------------------------------------------------------------
-
-### Example Request
-
-``` http
+**Client Request:**
+```http
 POST /api/media
 Content-Type: application/json
-```
 
-``` json
 {
   "name": "Attack on Titan",
   "description": "A story about humanity fighting against Titans.",
@@ -234,11 +215,10 @@ Content-Type: application/json
 }
 ```
 
-### Example Response
-
-``` json
+**Server Response (`200 OK`):**
+```json
 {
-  "id": "generated-id",
+  "id": "664f1b2e8f9a1c2d3e4f5a6b",
   "name": "Attack on Titan",
   "description": "A story about humanity fighting against Titans.",
   "type": "ANIME",
@@ -246,28 +226,15 @@ Content-Type: application/json
   "rating": 9.5
 }
 ```
+</details>
 
-------------------------------------------------------------------------
+<details>
+<summary><b>🟡 2. Validation / Enum Failure — <code>POST & PUT</code> (400 Bad Request)</b></summary>
+<br/>
 
-## ✅ Validation
+Triggered when `@Valid` catches a blank `name`, a `rating` outside `0.0–10.0`, malformed JSON, or an invalid enum string (e.g., `"ANIMEE"`):
 
-Incoming create and update requests are validated using **Jakarta
-Validation** through `@Valid` on the request DTO.
-
-Current request validation rules include:
-
--   `name` cannot be blank.
--   `type` is required.
--   `status` is required.
--   `rating` is optional.
--   If provided, `rating` must be between `0` and `10`.
-
-Invalid enum values and malformed JSON request bodies are also handled
-centrally.
-
-Example validation response:
-
-``` json
+```json
 {
   "status": 400,
   "message": "Validation failed",
@@ -276,300 +243,163 @@ Example validation response:
   }
 }
 ```
+</details>
 
-------------------------------------------------------------------------
+<details>
+<summary><b>🔴 3. Missing Resource Lookup — <code>GET, PUT & DELETE</code> (404 Not Found)</b></summary>
+<br/>
 
-## ⚠️ Exception Handling
+Intercepted by `GlobalExceptionHandler` when a target MongoDB ID does not exist:
 
-AniTracker uses a centralized `GlobalExceptionHandler` annotated with
-`@RestControllerAdvice`.
-
-### Resource Not Found
-
-When a requested media ID does not exist:
-
-``` json
+```json
 {
   "status": 404,
-  "message": "Media not found with id: example-id",
+  "message": "Media not found with id: 664f1b2e8f9a1c2d3e4f9999",
   "errors": null
 }
 ```
+</details>
 
-The same not-found handling is used for invalid GET, PUT, and DELETE
-resource IDs.
+---
 
-### Invalid Request Values
+## ⚡ Quick Start Terminal
 
-Invalid enum values (for example, `ANIMEE` instead of `ANIME`) and
-unreadable JSON request bodies return `400 Bad Request` with an
-explanatory error.
+> [!TIP]
+> **Zero Hardcoded Secrets:** AniTracker reads database credentials strictly from environment variables (`MONGODB_URI` and `MONGODB_TEST_URI`). Never commit real Atlas connection strings to Git.
 
-### Current HTTP Statuses
-
-  ----------------------------------------------------------------------------
-Status              Meaning                      Example
-  ------------------- ---------------------------- ---------------------------
-`200 OK`            Request completed            Create, GET, and PUT
-successfully
-
-`204 No Content`    Resource deleted             DELETE
-successfully
-
-`400 Bad Request`   Request data is invalid      Validation or invalid JSON
-value
-
-`404 Not Found`     Requested resource doesn't   Invalid media ID
-exist
-  ----------------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-## 🧪 Testing
-
-The project includes the following test classes:
-
-  -----------------------------------------------------------------------
-Test Class                                Purpose
-  ----------------------------------------- -----------------------------
-`AniTrackerApplicationTests`              Verifies that the Spring
-application context loads
-
-`MongoConnectionTest`                     Checks MongoDB connectivity
-and basic document operations
-
-`MediaServiceTest`                        Tests service-layer behaviour
-using unit tests and mocks
-
-`MediaControllerTest`                     Tests controller/API
-behaviour
-
-`MediaIntegrationTest`                    Tests API operations together
-with the application and
-database
-  -----------------------------------------------------------------------
-
-The project has previously passed its implemented test suite with the
-required MongoDB test environment variable configured. Run the tests
-locally to verify the current checkout and environment.
-
-### Running Tests
-
-``` bash
-./mvnw test
+```text
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🖥️ STEP 1: Export Environment Variables                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-On Windows:
-
-``` powershell
-mvnw.cmd test
+**Linux / macOS (Bash/Zsh):**
+```bash
+export MONGODB_URI="mongodb+srv://<user>:<password>@<cluster>.mongodb.net/anitracker"
+export MONGODB_TEST_URI="mongodb+srv://<user>:<password>@<cluster>.mongodb.net/anitracker_test"
 ```
 
-If Maven is installed globally, `mvn test` can also be used.
-
-------------------------------------------------------------------------
-
-## ⚙️ Configuration
-
-The application reads its MongoDB connection string from an environment
-variable rather than storing credentials in source control.
-
-Configure:
-
-``` text
-MONGODB_URI
-MONGODB_TEST_URI
+**Windows (PowerShell):**
+```powershell
+$env:MONGODB_URI="mongodb+srv://<user>:<password>@<cluster>.mongodb.net/anitracker"
+$env:MONGODB_TEST_URI="mongodb+srv://<user>:<password>@<cluster>.mongodb.net/anitracker_test"
 ```
 
--   `MONGODB_URI` --- MongoDB connection string used by the application.
--   `MONGODB_TEST_URI` --- MongoDB connection string used by tests that
-    require a test database.
-
-Set these variables in your IDE run configurations or your local
-environment. Do not commit real credentials or connection strings to
-GitHub.
-
-------------------------------------------------------------------------
-
-## 📂 Project Structure
-
-``` text
-src/
-├── main/
-│   ├── java/com/codersHub/AniTracker/
-│   │   ├── AniTrackerApplication.java
-│   │   │
-│   │   ├── controller/
-│   │   │   └── MediaController.java
-│   │   │
-│   │   ├── dto/
-│   │   │   ├── MediaRequest.java
-│   │   │   └── MediaResponse.java
-│   │   │
-│   │   ├── entity/
-│   │   │   ├── Media.java
-│   │   │   ├── MediaStatus.java
-│   │   │   └── MediaType.java
-│   │   │
-│   │   ├── exception/
-│   │   │   ├── ErrorResponse.java
-│   │   │   ├── GlobalExceptionHandler.java
-│   │   │   └── ResourceNotFoundException.java
-│   │   │
-│   │   ├── mapper/
-│   │   │   └── MediaMapper.java
-│   │   │
-│   │   ├── repository/
-│   │   │   └── MediaRepository.java
-│   │   │
-│   │   └── service/
-│   │       └── MediaService.java
-│   │
-│   └── resources/
-│       └── application.properties
-│
-└── test/
-    ├── java/com/codersHub/AniTracker/
-    │   ├── AniTrackerApplicationTests.java
-    │   ├── MongoConnectionTest.java
-    │   ├── MediaIntegrationTest.java
-    │   ├── controller/
-    │   │   └── MediaControllerTest.java
-    │   └── service/
-    │       └── MediaServiceTest.java
-    │
-    └── resources/
-        └── application.properties
+```text
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🚀 STEP 2: Boot the Engine or Run Tests                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-------------------------------------------------------------------------
+```bash
+# Start the Spring Boot server (Unix / macOS)
+./mvnw spring-boot:run
 
-## 🚀 Development Roadmap
-
-### Completed
-
--   [x] Spring Boot project initialization
--   [x] MongoDB Atlas integration
--   [x] Media entity
--   [x] Media type and status enums
--   [x] MongoDB repository
--   [x] Service layer
--   [x] REST controller
--   [x] Media CRUD operations
--   [x] Request validation
--   [x] Global exception handling
--   [x] Resource not found handling
--   [x] Invalid request/enum value handling
--   [x] Safe PUT/update handling
--   [x] Safe DELETE handling
--   [x] Appropriate HTTP status responses
--   [x] `MediaRequest` and `MediaResponse` DTOs
--   [x] `MediaMapper`
--   [x] DTO integration across media endpoints
--   [x] MongoDB connection test
--   [x] Service unit tests
--   [x] Controller tests
--   [x] Media integration tests
-
-### Next: Foundation & Architecture
-
--   [ ] Review and finalize the multi-user domain model
--   [ ] Separate shared media metadata from personal library data
--   [ ] Design the `User` and `UserMedia` relationship
--   [ ] Define ownership and data-isolation rules
--   [ ] Refactor existing media CRUD around the finalized model
--   [ ] Add/update tests for the revised architecture
-
-### Planned
-
--   [ ] User registration and profile management
--   [ ] Password hashing and login
--   [ ] Spring Security integration
--   [ ] JWT-based authentication
--   [ ] Authorization and role-based access control
--   [ ] Personal media libraries
--   [ ] Watch status and episode/season progress
--   [ ] Personal ratings and notes
--   [ ] Media discovery and external metadata integration
--   [ ] Genres, tags, and categories
--   [ ] Search, filtering, pagination, and sorting
--   [ ] External streaming/watch links and availability information
--   [ ] Recommendation functionality
--   [ ] Swagger / OpenAPI documentation
--   [ ] Database indexes and query optimization
--   [ ] Caching and other performance improvements
--   [ ] Deployment and production-readiness improvements
-
-------------------------------------------------------------------------
-
-## 🎯 Project Goal
-
-AniTracker aims to evolve from an initial Media CRUD API into a
-**multi-user media discovery and personal tracking backend**.
-
-The intended high-level architecture separates three important concepts:
-
-``` text
-User
-  │
-  │ owns
-  ▼
-UserMedia / LibraryEntry
-  │
-  │ references
-  ▼
-Media
+# Start the Spring Boot server (Windows)
+mvnw.cmd spring-boot:run
 ```
 
--   **User** --- account and profile information.
--   **Media** --- shared information about a title, such as its name,
-    description, type, genres, and release details.
--   **UserMedia / LibraryEntry** --- a user's relationship with a title,
-    including watch status, progress, and personal rating.
+---
 
-This separation will allow multiple users to track the same title
-independently without duplicating its shared metadata.
+## 🧪 Automated Verification Suite
 
-The development roadmap is:
+Every architectural boundary is verified before code moves forward. Run `./mvnw test` (or `mvnw.cmd test` on Windows) to execute the full suite:
 
-``` text
-Project Setup
-    ↓
-MongoDB Integration
-    ↓
-Media CRUD
-    ↓
-Validation & Exception Handling
-    ↓
-DTOs & Mapping
-    ↓
-Testing
-    ↓
-Multi-user Domain Design
-    ↓
-User Management
-    ↓
-Authentication & Authorization
-    ↓
-Personal Media Libraries
-    ↓
-Watch Progress
-    ↓
-Media Discovery & External Data
-    ↓
-Search, Filtering & Recommendations
-    ↓
-Documentation, Optimization & Deployment
+| Test Suite | Layer / Scope | Verification Target |
+| :--- | :--- | :--- |
+| 🧩 `AniTrackerApplicationTests` | **Smoke Test** | Ensures the Spring Boot application context wires up cleanly |
+| 🔌 `MongoConnectionTest` | **Infrastructure** | Verifies live connectivity and document CRUD against MongoDB |
+| ⚙️ `MediaServiceTest` | **Unit (Mockito)** | Tests service business rules, mapper calls & exceptions in isolation |
+| 🌐 `MediaControllerTest` | **Web Slice** | Validates REST routing, validation triggers, and HTTP status codes |
+| 🔗 `MediaIntegrationTest` | **End-to-End** | Executes full API lifecycles against `MONGODB_TEST_URI` |
+
+---
+
+## 📂 Blueprint & Package Structure
+
+```text
+📦 AniTracker
+ ┣ 📂 src/main/java/com/codersHub/AniTracker
+ ┃ ┣ 📜 AniTrackerApplication.java          # 🚀 Spring Boot entry point
+ ┃ ┣ 📂 controller
+ ┃ ┃ ┗ 📜 MediaController.java              # 🌐 REST API endpoints (/api/media)
+ ┃ ┣ 📂 dto
+ ┃ ┃ ┣ 📜 MediaRequest.java                 # 📥 Inbound payload + Jakarta @Valid rules
+ ┃ ┃ ┗ 📜 MediaResponse.java                # 📤 Outbound serialized API contract
+ ┃ ┣ 📂 entity
+ ┃ ┃ ┣ 📜 Media.java                        # 🗄️ MongoDB @Document entity
+ ┃ ┃ ┣ 📜 MediaStatus.java                  # 📌 Enum: PLANNED, IN_PROGRESS, COMPLETED...
+ ┃ ┃ ┗ 📜 MediaType.java                    # 🎞️ Enum: ANIME, MOVIE, TV_SHOW, CARTOON
+ ┃ ┣ 📂 exception
+ ┃ ┃ ┣ 📜 ErrorResponse.java                # ⚠️ Standardized JSON error structure
+ ┃ ┃ ┣ 📜 GlobalExceptionHandler.java       # 🛡️ @RestControllerAdvice interceptor
+ ┃ ┃ ┗ 📜 ResourceNotFoundException.java    # 🔍 Custom 404 domain exception
+ ┃ ┣ 📂 mapper
+ ┃ ┃ ┗ 📜 MediaMapper.java                  # 🔄 DTO ⇄ Entity conversion engine
+ ┃ ┣ 📂 repository
+ ┃ ┃ ┗ 📜 MediaRepository.java              # 🔗 Spring Data MongoRepository interface
+ ┃ ┗ 📂 service
+ ┃   ┗ 📜 MediaService.java                 # 🧠 Core business logic & safe CRUD checks
+ ┗ 📂 src/test/java/com/codersHub/AniTracker # 🧪 Unit, Controller & Integration tests
 ```
 
-The goal is to build AniTracker incrementally while understanding
-**why** each component is needed, rather than simply adding features
-without understanding their purpose.
+---
 
-> 🚧 **Status: Active Development**
->
-> The initial Media CRUD foundation, MongoDB integration, request
-> validation, centralized exception handling, DTO mapping, and initial
-> automated tests are implemented. The next milestone is to finalize the
-> multi-user domain architecture before introducing user accounts,
-> authentication, and personal libraries.
+## 🗺️ Engineering Roadmap
+
+```text
+  [ PHASE 1: Core CRUD & DTO Shield ]      ✅ COMPLETED
+                  │
+                  ▼
+  [ PHASE 2: Multi-User Domain Split ]     🚧 NEXT UP (Current Milestone)
+                  │
+                  ▼
+  [ PHASE 3: Auth, JWT & User Libraries ]  ⏳ PLANNED
+                  │
+                  ▼
+  [ PHASE 4: Discovery, Search & Scale ]   🔮 FUTUREHORIZON
+```
+
+<details open>
+<summary><b>✅ Phase 1: Core Media Engine (Completed)</b></summary>
+
+- [x] Spring Boot 4.1.1 & Java 21 initialization with MongoDB Atlas
+- [x] Core `Media` entity, `MediaType` & `MediaStatus` enums, and `MediaRepository`
+- [x] Full CRUD REST API with safe `PUT` and `DELETE` existence checks
+- [x] `MediaRequest` and `MediaResponse` DTO isolation + `MediaMapper`
+- [x] Declarative Jakarta validation & `@RestControllerAdvice` global exception handling
+- [x] Complete unit, controller, database connection, and API integration test suites
+</details>
+
+<details open>
+<summary><b>🚧 Phase 2: Multi-User Architecture Refactor (In Progress)</b></summary>
+
+- [ ] Finalize the multi-user domain model (`User` ➔ `UserMedia` ➔ `Media`)
+- [ ] Decouple shared media catalog metadata from personal watch status & ratings
+- [ ] Define strict data-isolation and ownership rules per user account
+- [ ] Refactor existing CRUD services and automated tests around the split architecture
+</details>
+
+<details>
+<summary><b>⏳ Phase 3: Security, Identity & Personal Libraries (Planned)</b></summary>
+
+- [ ] User registration, profile management, and secure password hashing
+- [ ] Spring Security integration with stateless JWT authentication & role-based access control
+- [ ] Personal library endpoints with episode/season progress counters and personal notes
+</details>
+
+<details>
+<summary><b>🔮 Phase 4: Discovery, Optimization & Production (Future)</b></summary>
+
+- [ ] External metadata integration, genres, tags, and official streaming availability links
+- [ ] Advanced search, multi-criteria filtering, pagination, and sorting
+- [ ] Personalized media recommendation engine
+- [ ] Interactive Swagger / OpenAPI documentation
+- [ ] MongoDB indexing, caching layers, and production deployment readiness
+</details>
+
+---
+
+<div align="center">
+  <kbd>⚡ Built incrementally with a focus on clean backend architecture</kbd>
+</div>
