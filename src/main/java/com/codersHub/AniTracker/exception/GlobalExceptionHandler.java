@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 
 
 
-    // Validation errors: Missing names, missing enum fields, or ratings outside the allowed range.
+    // Validation errors: Missing names or missing enum fields.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException exception){
         Map<String, String> errors = new HashMap<>();

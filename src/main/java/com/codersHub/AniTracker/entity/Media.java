@@ -1,7 +1,5 @@
 package com.codersHub.AniTracker.entity;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
@@ -26,8 +24,4 @@ public class Media {
 
     @NotNull(message = "Media Status should not be Null!")
     private MediaStatus status;
-    
-    @DecimalMin(message = "Cannot be Smaller than 0!", value = "0.0")
-    @DecimalMax(message = "Cannot be greater than 10!", value = "10.0")
-    private Double rating;
 }

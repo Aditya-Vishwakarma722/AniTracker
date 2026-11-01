@@ -66,7 +66,6 @@ public class MediaControllerTest {
         media.setDescription("Humanity fights against Titans");
         media.setType(MediaType.ANIME);
         media.setStatus(MediaStatus.COMPLETED);
-        media.setRating(9.0);
 
         MediaResponse response = new MediaResponse();
         response.setId("123");
@@ -74,7 +73,6 @@ public class MediaControllerTest {
         response.setDescription("Humanity fights against Titans");
         response.setType(MediaType.ANIME);
         response.setStatus(MediaStatus.COMPLETED);
-        response.setRating(9.0);
 
         when(mediaService.GetAllMedia()).thenReturn(List.of(media));
         when(mediaMapper.toMediaResponse(media)).thenReturn(response);
@@ -89,8 +87,7 @@ public class MediaControllerTest {
                 .andExpect(jsonPath("$[0].description")
                         .value("Humanity fights against Titans"))
                 .andExpect(jsonPath("$[0].type").value("ANIME"))
-                .andExpect(jsonPath("$[0].status").value("COMPLETED"))
-                .andExpect(jsonPath("$[0].rating").value(9.0));
+                .andExpect(jsonPath("$[0].status").value("COMPLETED"));
     }
 
     @Test
@@ -102,7 +99,6 @@ public class MediaControllerTest {
         media.setDescription("Humanity fights against Titans");
         media.setType(MediaType.ANIME);
         media.setStatus(MediaStatus.COMPLETED);
-        media.setRating(9.0);
 
         MediaResponse response = new MediaResponse();
         response.setId("123");
@@ -110,7 +106,6 @@ public class MediaControllerTest {
         response.setDescription("Humanity fights against Titans");
         response.setType(MediaType.ANIME);
         response.setStatus(MediaStatus.COMPLETED);
-        response.setRating(9.0);
 
         when(mediaService.getMediaById("123")).thenReturn(media);
         when(mediaMapper.toMediaResponse(media)).thenReturn(response);
@@ -123,8 +118,7 @@ public class MediaControllerTest {
                 .andExpect(jsonPath("$.description")
                         .value("Humanity fights against Titans"))
                 .andExpect(jsonPath("$.type").value("ANIME"))
-                .andExpect(jsonPath("$.status").value("COMPLETED"))
-                .andExpect(jsonPath("$.rating").value(9.0));
+                .andExpect(jsonPath("$.status").value("COMPLETED"));
 
         verify(mediaService).getMediaById("123");
     }
@@ -137,7 +131,6 @@ public class MediaControllerTest {
         media.setDescription("Humanity fights against Titans");
         media.setType(MediaType.ANIME);
         media.setStatus(MediaStatus.COMPLETED);
-        media.setRating(9.0);
 
         Media savedMedia = new Media();
         savedMedia.setId("123");
@@ -145,7 +138,6 @@ public class MediaControllerTest {
         savedMedia.setDescription("Humanity fights against Titans");
         savedMedia.setType(MediaType.ANIME);
         savedMedia.setStatus(MediaStatus.COMPLETED);
-        savedMedia.setRating(9.0);
 
         MediaResponse response = new MediaResponse();
         response.setId("123");
@@ -153,7 +145,6 @@ public class MediaControllerTest {
         response.setDescription("Humanity fights against Titans");
         response.setType(MediaType.ANIME);
         response.setStatus(MediaStatus.COMPLETED);
-        response.setRating(9.0);
 
         when(mediaMapper.toMedia(any(MediaRequest.class)))
                 .thenReturn(media);
@@ -171,8 +162,7 @@ public class MediaControllerTest {
                                 "name": "Attack on Titan",
                                 "description": "Humanity fights against Titans",
                                 "type": "ANIME",
-                                "status": "COMPLETED",
-                                "rating": 9.0
+                                "status": "COMPLETED"
                             }
                             """))
                 .andExpect(status().isOk())
@@ -183,8 +173,7 @@ public class MediaControllerTest {
                 .andExpect(jsonPath("$.description")
                         .value("Humanity fights against Titans"))
                 .andExpect(jsonPath("$.type").value("ANIME"))
-                .andExpect(jsonPath("$.status").value("COMPLETED"))
-                .andExpect(jsonPath("$.rating").value(9.0));
+                .andExpect(jsonPath("$.status").value("COMPLETED"));
 
         verify(mediaMapper).toMedia(any(MediaRequest.class));
         verify(mediaService).SaveMedia(media);
@@ -199,7 +188,6 @@ public class MediaControllerTest {
         media.setDescription("The final battle for humanity");
         media.setType(MediaType.ANIME);
         media.setStatus(MediaStatus.COMPLETED);
-        media.setRating(10.0);
 
         Media updatedMedia = new Media();
         updatedMedia.setId("123");
@@ -207,7 +195,6 @@ public class MediaControllerTest {
         updatedMedia.setDescription("The final battle for humanity");
         updatedMedia.setType(MediaType.ANIME);
         updatedMedia.setStatus(MediaStatus.COMPLETED);
-        updatedMedia.setRating(10.0);
 
         MediaResponse response = new MediaResponse();
         response.setId("123");
@@ -215,7 +202,6 @@ public class MediaControllerTest {
         response.setDescription("The final battle for humanity");
         response.setType(MediaType.ANIME);
         response.setStatus(MediaStatus.COMPLETED);
-        response.setRating(10.0);
 
         when(mediaMapper.toMedia(any(MediaRequest.class)))
                 .thenReturn(media);
@@ -233,8 +219,7 @@ public class MediaControllerTest {
                                 "name": "Attack on Titan Final Season",
                                 "description": "The final battle for humanity",
                                 "type": "ANIME",
-                                "status": "COMPLETED",
-                                "rating": 10.0
+                                "status": "COMPLETED"
                             }
                             """))
                 .andExpect(status().isOk())
@@ -246,8 +231,7 @@ public class MediaControllerTest {
                 .andExpect(jsonPath("$.description")
                         .value("The final battle for humanity"))
                 .andExpect(jsonPath("$.type").value("ANIME"))
-                .andExpect(jsonPath("$.status").value("COMPLETED"))
-                .andExpect(jsonPath("$.rating").value(10.0));
+                .andExpect(jsonPath("$.status").value("COMPLETED"));
 
         verify(mediaMapper).toMedia(any(MediaRequest.class));
         verify(mediaService).updateMedia("123", media);
@@ -272,8 +256,7 @@ public class MediaControllerTest {
                 "name": "",
                 "description": "Humanity fights against Titans",
                 "type": "ANIME",
-                "status": "COMPLETED",
-                "rating": 9.0
+                "status": "COMPLETED"
             }
             """;
 
@@ -281,48 +264,6 @@ public class MediaControllerTest {
                         .contentType("application/json")
                         .content(requestBody))
                 .andExpect(status().isBadRequest());
-        verifyNoInteractions(mediaService);
-    }
-
-
-    @Test
-    void CreateMediaWithInvalidRatingTest() throws Exception {
-        String requestBody = """
-            {
-                "name": "Attack on Titan",
-                "description": "Humanity fights against Titans",
-                "type": "ANIME",
-                "status": "COMPLETED",
-                "rating": 11.0
-            }
-            """;
-
-        mockMvc.perform(post("/api/media")
-                        .contentType("application/json")
-                        .content(requestBody))
-                .andExpect(status().isBadRequest());
-
-        verifyNoInteractions(mediaService);
-    }
-
-
-    @Test
-    void CreateMediaWithNegativeRatingTest() throws Exception {
-        String requestBody = """
-            {
-                "name": "Attack on Titan",
-                "description": "Humanity fights against Titans",
-                "type": "ANIME",
-                "status": "COMPLETED",
-                "rating": -1.0
-            }
-            """;
-
-        mockMvc.perform(post("/api/media")
-                        .contentType("application/json")
-                        .content(requestBody))
-                .andExpect(status().isBadRequest());
-
         verifyNoInteractions(mediaService);
     }
 
@@ -333,8 +274,7 @@ public class MediaControllerTest {
             {
                 "name": "Attack on Titan",
                 "description": "Humanity fights against Titans",
-                "status": "COMPLETED",
-                "rating": 9.0
+                "status": "COMPLETED"
             }
             """;
 
@@ -353,8 +293,7 @@ public class MediaControllerTest {
             {
                 "name": "Attack on Titan",
                 "description": "Humanity fights against Titans",
-                "type": "ANIME",
-                "rating": 9.0
+                "type": "ANIME"
             }
             """;
 
@@ -374,8 +313,7 @@ public class MediaControllerTest {
                 "name": "Attack on Titan",
                 "description": "Humanity fights against Titans",
                 "type": "BOOK",
-                "status": "COMPLETED",
-                "rating": 9.0
+                "status": "COMPLETED"
             }
             """;
 
@@ -409,8 +347,7 @@ public class MediaControllerTest {
                 "name": "Attack on Titan",
                 "description": "Humanity fights against Titans",
                 "type": "BOOK",
-                "status": "COMPLETED",
-                "rating": 9.0
+                "status": "COMPLETED"
             }
             """;
 
@@ -452,8 +389,7 @@ public class MediaControllerTest {
                 "name": "Attack on Titan",
                 "description": "Humanity fights against Titans",
                 "type": "ANIME",
-                "status": "COMPLETED",
-                "rating": 9.0
+                "status": "COMPLETED"
             }
             """;
 
@@ -480,7 +416,6 @@ public class MediaControllerTest {
                 "name": "Attack on Titan",
                 "type": "ANIME",
                 "status": "COMPLETED",
-                "rating": 9.0,
             }
             """;
 

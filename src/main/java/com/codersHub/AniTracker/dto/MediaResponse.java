@@ -14,5 +14,4 @@ public class MediaResponse {
     private String description;
     private MediaType type;
     private MediaStatus status;
-    private Double rating;
 }

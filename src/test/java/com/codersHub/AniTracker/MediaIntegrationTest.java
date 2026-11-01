@@ -41,8 +41,7 @@ class MediaIntegrationTest {
                     "name": "Integration Test Anime",
                     "description": "Created during an integration test",
                     "type": "ANIME",
-                    "status": "COMPLETED",
-                    "rating": 9.0
+                    "status": "COMPLETED"
                 }
                 """;
 
@@ -67,7 +66,6 @@ class MediaIntegrationTest {
                     .orElseThrow();
 
             assertEquals("Integration Test Anime", savedMedia.getName());
-            assertEquals(9.0, savedMedia.getRating());
 
         } finally {
             mediaRepository.deleteById(response.getId());
@@ -83,8 +81,7 @@ class MediaIntegrationTest {
                 "name": "Integration Test Anime",
                 "description": "Created during an integration test",
                 "type": "ANIME",
-                "status": "COMPLETED",
-                "rating": 9.0
+                "status": "COMPLETED"
             }
             """;
 
@@ -121,8 +118,7 @@ class MediaIntegrationTest {
                 "name": "Find By ID Anime",
                 "description": "Testing retrieval by ID",
                 "type": "ANIME",
-                "status": "COMPLETED",
-                "rating": 9.0
+                "status": "COMPLETED"
             }
             """;
 
@@ -143,9 +139,7 @@ class MediaIntegrationTest {
                     .andExpect(jsonPath("$.id")
                             .value(createdMedia.getId()))
                     .andExpect(jsonPath("$.name")
-                            .value("Find By ID Anime"))
-                    .andExpect(jsonPath("$.rating")
-                            .value(9.0));
+                            .value("Find By ID Anime"));
 
         } finally {
             mediaRepository.deleteById(createdMedia.getId());
@@ -161,8 +155,7 @@ class MediaIntegrationTest {
                 "name": "Anime Before Update",
                 "description": "Original description",
                 "type": "ANIME",
-                "status": "COMPLETED",
-                "rating": 7.0
+                "status": "COMPLETED"
             }
             """;
 
@@ -183,8 +176,7 @@ class MediaIntegrationTest {
                     "name": "Anime After Update",
                     "description": "Updated description",
                     "type": "ANIME",
-                    "status": "COMPLETED",
-                    "rating": 9.5
+                    "status": "COMPLETED"
                 }
                 """;
 
@@ -193,8 +185,7 @@ class MediaIntegrationTest {
                             .content(updateBody))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.name")
-                            .value("Anime After Update"))
-                    .andExpect(jsonPath("$.rating").value(9.5));
+                            .value("Anime After Update"));
 
             Media savedMedia = mediaRepository
                     .findById(createdMedia.getId())
@@ -202,7 +193,6 @@ class MediaIntegrationTest {
 
             assertEquals("Anime After Update", savedMedia.getName());
             assertEquals("Updated description", savedMedia.getDescription());
-            assertEquals(9.5, savedMedia.getRating());
 
         } finally {
             mediaRepository.deleteById(createdMedia.getId());
@@ -219,8 +209,7 @@ class MediaIntegrationTest {
                 "name": "Anime To Delete",
                 "description": "Testing deletion",
                 "type": "ANIME",
-                "status": "COMPLETED",
-                "rating": 8.0
+                "status": "COMPLETED"
             }
             """;
 
@@ -266,8 +255,7 @@ class MediaIntegrationTest {
             {
                 "description": "Test description",
                 "type": "ANIME",
-                "status": "WATCHING",
-                "rating": 8
+                "status": "WATCHING"
             }
             """;
 
@@ -284,8 +272,7 @@ class MediaIntegrationTest {
                 "name": "   ",
                 "description": "Test description",
                 "type": "ANIME",
-                "status": "WATCHING",
-                "rating": 8
+                "status": "WATCHING"
             }
             """;
 
@@ -302,8 +289,7 @@ class MediaIntegrationTest {
                 "name": "Invalid Enum Test",
                 "description": "Test description",
                 "type": "NOT_A_REAL_TYPE",
-                "status": "WATCHING",
-                "rating": 8
+                "status": "WATCHING"
             }
             """;
 
@@ -322,8 +308,7 @@ class MediaIntegrationTest {
             "name": "Updated Test",
             "description": "Updated description",
             "type": "ANIME",
-            "status": "IN_PROGRESS",
-            "rating": 9
+            "status": "IN_PROGRESS"
         }
         """;
 
@@ -346,7 +331,7 @@ class MediaIntegrationTest {
         String invalidJson = """
             {
                 "name": "Broken JSON",
-                "rating":
+                "type":
             }
             """;
 

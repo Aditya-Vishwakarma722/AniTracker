@@ -16,7 +16,6 @@ public class MediaMapper {
         media.setDescription(mediaRequest.getDescription());
         media.setType(mediaRequest.getType());
         media.setStatus(mediaRequest.getStatus());
-        media.setRating(mediaRequest.getRating());
 
         return media;
     }
@@ -30,7 +29,6 @@ public class MediaMapper {
         response.setDescription(media.getDescription());
         response.setType(media.getType());
         response.setStatus(media.getStatus());
-        response.setRating(media.getRating());
 
         return response;
     }

@@ -165,20 +165,19 @@ AniTracker enforces strict separation of concerns. External API contracts are co
 │ • description [Optional]  │ ─────► │ • name                    │ ─────► │ • name                    │
 │ • type        [Required]  │ Mapper │ • description             │ Mapper │ • description             │
 │ • status      [Required]  │        │ • type        [MediaType] │        │ • type                    │
-│ • rating      [0.0 - 10]  │        │ • status    [MediaStatus] │        │ • status                  │
-└───────────────────────────┘        │ • rating                  │        │ • rating                  │
+└───────────────────────────┘        │ • status    [MediaStatus] │        │ • status                  │
   (No ID accepted from user)         └───────────────────────────┘        └───────────────────────────┘
 ```
 
 > [!WARNING]
 > **Upcoming Domain Split (Phase 2 Architecture Refactor):**
-> Right now, `status` and `rating` live directly inside the `Media` document as a single-user prototype. Before multi-user accounts launch, the schema is being split into three distinct concepts so thousands of users can track the same show without duplicating catalog metadata:
+> Right now, `status` lives directly inside the `Media` document as a single-user prototype. Before multi-user accounts launch, the schema is being split into three distinct concepts so thousands of users can track the same show without duplicating catalog metadata:
 >
 > ```text
 > ┌──────────────┐     owns     ┌─────────────────────────────┐   references   ┌─────────────────────────┐
 > │  👤 User     │ ───────────► │ 📚 UserMedia (LibraryEntry) │ ─────────────► │ 🎬 Media (Shared Info)  │
 > │  • Profile   │              │  • Watch Status & Progress  │                │  • Title & Synopsis     │
-> │  • Auth/JWT  │              │  • Personal Rating & Notes  │                │  • Type, Genres & Links │
+> │  • Auth/JWT  │              │  • Personal Notes           │                │  • Type, Genres & Links │
 > └──────────────┘              └─────────────────────────────┘                └─────────────────────────┘
 > ```
 
@@ -210,8 +209,7 @@ Content-Type: application/json
   "name": "Attack on Titan",
   "description": "A story about humanity fighting against Titans.",
   "type": "ANIME",
-  "status": "COMPLETED",
-  "rating": 9.5
+  "status": "COMPLETED"
 }
 ```
 
@@ -222,8 +220,7 @@ Content-Type: application/json
   "name": "Attack on Titan",
   "description": "A story about humanity fighting against Titans.",
   "type": "ANIME",
-  "status": "COMPLETED",
-  "rating": 9.5
+  "status": "COMPLETED"
 }
 ```
 </details>
@@ -232,7 +229,7 @@ Content-Type: application/json
 <summary><b>🟡 2. Validation / Enum Failure — <code>POST & PUT</code> (400 Bad Request)</b></summary>
 <br/>
 
-Triggered when `@Valid` catches a blank `name`, a `rating` outside `0.0–10.0`, malformed JSON, or an invalid enum string (e.g., `"ANIMEE"`):
+Triggered when `@Valid` catches a blank `name`, malformed JSON, or an invalid enum string (e.g., `"ANIMEE"`):
 
 ```json
 {
@@ -249,7 +246,7 @@ Triggered when `@Valid` catches a blank `name`, a `rating` outside `0.0–10.0`,
 <summary><b>🔴 3. Missing Resource Lookup — <code>GET, PUT & DELETE</code> (404 Not Found)</b></summary>
 <br/>
 
-Intercepted by `GlobalExceptionHandler` when a target MongoDB ID does not exist:
+Interpreted by `GlobalExceptionHandler` when a target MongoDB ID does not exist:
 
 ```json
 {
@@ -375,7 +372,7 @@ Every architectural boundary is verified before code moves forward. Run `./mvnw 
 <summary><b>🚧 Phase 2: Multi-User Architecture Refactor (In Progress)</b></summary>
 
 - [ ] Finalize the multi-user domain model (`User` ➔ `UserMedia` ➔ `Media`)
-- [ ] Decouple shared media catalog metadata from personal watch status & ratings
+- [ ] Decouple shared media catalog metadata from personal watch status
 - [ ] Define strict data-isolation and ownership rules per user account
 - [ ] Refactor existing CRUD services and automated tests around the split architecture
 </details>

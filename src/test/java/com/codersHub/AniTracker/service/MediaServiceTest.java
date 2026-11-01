@@ -105,14 +105,12 @@ class MediaServiceTest {
         existingMedia.setDescription("Original description");
         existingMedia.setType(MediaType.ANIME);
         existingMedia.setStatus(MediaStatus.PLANNED);
-        existingMedia.setRating(7.0);
 
         Media updatedMedia = new Media();
         updatedMedia.setName("One Piece");
         updatedMedia.setDescription("Updated description");
         updatedMedia.setType(MediaType.ANIME);
         updatedMedia.setStatus(MediaStatus.COMPLETED);
-        updatedMedia.setRating(9.8);
 
         when(mediaRepository.findById(id))
                 .thenReturn(java.util.Optional.of(existingMedia));
@@ -126,7 +124,6 @@ class MediaServiceTest {
         assertEquals("Updated description", result.getDescription());
         assertEquals(MediaType.ANIME, result.getType());
         assertEquals(MediaStatus.COMPLETED, result.getStatus());
-        assertEquals(9.8, result.getRating());
 
         verify(mediaRepository).findById(id);
         verify(mediaRepository).save(existingMedia);
@@ -178,4 +175,3 @@ class MediaServiceTest {
         verify(mediaRepository,never()).deleteById(id);
     }
 }
-
